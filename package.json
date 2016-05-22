@@ -1,6 +1,6 @@
 {
   "name": "node-aws-lambda-scheduler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Minimalist utility to automatically schedule AWS Lambda functions",
   "main": "index.js",
   "scripts": {
@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "pify": "^2.3.0",
-    "rho-cc-aws-region": "git+https://github.com/bodylabs/rho-cc-aws-region.git#71_initial",
+    "rho-cc-aws-region": "1.0.0",
     "rho-contracts": ">=0.0.5",
     "underscore": "^1.8.3"
   }
