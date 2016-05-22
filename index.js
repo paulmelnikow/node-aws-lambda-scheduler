@@ -46,7 +46,7 @@ class LambdaScheduler {
         this.scheduleExpression = config.scheduleExpression;
     }
 
-    // Update the CloudWatch event and return its ARN via promise.
+    // Update the CloudWatch Events rule and return its ARN via promise.
     updateEvent () {
         const cloudWatchEvents = this.cloudWatchEvents;
         const listRules = pify(cloudWatchEvents.listRules.bind(cloudWatchEvents));
@@ -66,6 +66,30 @@ class LambdaScheduler {
                 } else {
                     return putRule(ruleAttrs).then((data) => data.RuleArn);
                 }
+            });
+    }
+
+    authorizeRule (ruleArn) {
+        const addPermission = pify(this.lambda.addPermission.bind(this.lambda));
+
+        const permissionAttrs = {
+            FunctionName: this.functionName,
+            StatementId: 'InvokeFromCloudWatchEvent',
+            Action: 'lambda:InvokeFunction',
+            Principal: 'events.amazonaws.com',
+            SourceArn: ruleArn,
+        };
+
+        return addPermission(permissionAttrs)
+            .catch((err) => {
+                if (err.code !== 'ResourceConflictException') {
+                    throw err;
+                }
+
+                // A conflict means there is already a statement in place with
+                // the ID 'InvokeFromCloudWatchEvent'. We're going to assume
+                // this is a rule we have created during a previous deploy which
+                // is still in effect.
             });
     }
 
@@ -93,6 +117,7 @@ class LambdaScheduler {
 
     schedule () {
         return this.updateEvent()
+            .then((ruleArn) => this.authorizeRule(ruleArn))
             .then(() => this.updateEventTarget());
     }
 
