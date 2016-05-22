@@ -1,0 +1,46 @@
+{
+  "name": "node-aws-lambda-scheduler",
+  "version": "1.0.0",
+  "description": "Minimalist utility to automatically schedule AWS Lambda functions",
+  "main": "index.js",
+  "scripts": {
+    "jscs": "jscs --config node_modules/bodylabs-javascript-style/jscs/jscsrc-shared *.js",
+    "eslint": "eslint --config node_modules/bodylabs-javascript-style/eslint/eslintrc-shared.yml '*.js'",
+    "lint": "npm run jscs && npm run eslint",
+    "test": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulmelnikow/node-aws-lambda-scheduled.git"
+  },
+  "keywords": [
+    "lambda",
+    "aws",
+    "deploy",
+    "scheduled",
+    "cron"
+  ],
+  "author": "Paul Melnikow",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/paulmelnikow/node-aws-lambda-scheduled/issues"
+  },
+  "homepage": "https://github.com/paulmelnikow/node-aws-lambda-scheduled#readme",
+  "devDependencies": {
+    "aws-sdk": "2.x.x",
+    "bodylabs-javascript-style": "^5.0.0",
+    "eslint": "^2.10.2",
+    "jscs": "^2.11.0",
+    "node-aws-lambda": "0.1.8"
+  },
+  "peerDependencies": {
+    "aws-sdk": "2.x.x",
+    "node-aws-lambda": "0.1.8"
+  },
+  "dependencies": {
+    "pify": "^2.3.0",
+    "rho-cc-aws-region": "git+https://github.com/bodylabs/rho-cc-aws-region.git#71_initial",
+    "rho-contracts": ">=0.0.5",
+    "underscore": "^1.8.3"
+  }
+}
