@@ -3,7 +3,7 @@
 const pify = require('pify');
 const AWS = require('aws-sdk');
 const _ = require('underscore');
-const c = require('rho-contracts');
+const c = require('rho-cc-promise').mixin(require('rho-contracts'));
 
 
 var cc = {};
@@ -29,12 +29,28 @@ cc.lambdaSchedulerConfig = c.toContract({
 
 }).rename('lambdaSchedulerConfig');
 
+cc.ruleArn = c.string.rename('ruleArn');
 
-class LambdaScheduler {
+cc.lambdaScheduler = c.fun({ config: cc.lambdaSchedulerConfig })
+    .constructs({
+
+        updateEvent: c.fun()
+            .returnsPromise(cc.ruleArn),
+
+        authorizeRule: c.fun({ ruleArn: cc.ruleArn })
+            .returnsPromise(c.value(undefined)),
+
+        updateEventTarget: c.fun()
+            .returnsPromise(c.object),
+
+        schedule: c.fun()
+            .returnsPromise(c.value(undefined)),
+
+    });
+
+class LambdaSchedulerImpl {
 
     constructor (config) {
-        cc.lambdaSchedulerConfig.check(config);
-
         const awsAttrs = _(config).pick(
             'region', 'secretKeyId', 'secretAccessKey', 'secretToken');
 
@@ -123,4 +139,4 @@ class LambdaScheduler {
 
 }
 
-exports.LambdaScheduler = LambdaScheduler;
+exports.LambdaScheduler = cc.lambdaScheduler.wrap(LambdaSchedulerImpl);

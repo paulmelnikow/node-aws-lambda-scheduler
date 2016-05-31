@@ -40,7 +40,8 @@
   "dependencies": {
     "pify": "^2.3.0",
     "rho-cc-aws-region": "1.0.0",
-    "rho-contracts": ">=0.0.5",
+    "rho-cc-promise": "^1.0.1",
+    "rho-contracts": "git+https://git@github.com/bodylabs/rho-contracts.js.git#72_es6_classes",
     "underscore": "^1.8.3"
   }
 }
