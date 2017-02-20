@@ -1,6 +1,6 @@
 {
   "name": "node-aws-lambda-scheduler",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Minimalist utility to automatically schedule AWS Lambda functions",
   "main": "index.js",
   "scripts": {
