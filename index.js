@@ -3,7 +3,7 @@
 const pify = require('pify');
 const AWS = require('aws-sdk');
 const _ = require('underscore');
-const c = require('rho-cc-promise').mixin(require('rho-contracts'));
+const c = require('rho-cc-promise').mixin(require('rho-contracts-fork'));
 
 
 const cc = {};
