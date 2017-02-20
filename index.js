@@ -6,7 +6,7 @@ const _ = require('underscore');
 const c = require('rho-cc-promise').mixin(require('rho-contracts'));
 
 
-var cc = {};
+const cc = {};
 
 cc.awsRegion = require('rho-cc-aws-region');
 
@@ -74,13 +74,13 @@ class LambdaSchedulerImpl {
         };
 
         return listRules({})
-            .then((rules) => {
+            .then(rules => {
                 const matching = _(rules.Rules).findWhere(ruleAttrs);
 
                 if (matching) {
                     return matching.Arn;
                 } else {
-                    return putRule(ruleAttrs).then((data) => data.RuleArn);
+                    return putRule(ruleAttrs).then(data => data.RuleArn);
                 }
             });
     }
@@ -97,7 +97,7 @@ class LambdaSchedulerImpl {
         };
 
         return addPermission(permissionAttrs)
-            .catch((err) => {
+            .catch(err => {
                 if (err.code !== 'ResourceConflictException') {
                     throw err;
                 }
@@ -113,7 +113,7 @@ class LambdaSchedulerImpl {
         const getFunction = pify(this.lambda.getFunction.bind(this.lambda));
 
         return getFunction({ FunctionName: this.functionName })
-            .then((functionData) => functionData.Configuration.FunctionArn);
+            .then(functionData => functionData.Configuration.FunctionArn);
     }
 
     updateEventTarget () {
@@ -121,7 +121,7 @@ class LambdaSchedulerImpl {
         const putTargets = pify(cloudWatchEvents.putTargets.bind(cloudWatchEvents));
 
         this._getFunctionArn()
-            .then((functionArn) => {
+            .then(functionArn => {
                 const targetAttrs = {
                     Rule: this.ruleName,
                     Targets: [{ Id: '1', Arn: functionArn }],
@@ -133,7 +133,7 @@ class LambdaSchedulerImpl {
 
     schedule () {
         return this.updateEvent()
-            .then((ruleArn) => this.authorizeRule(ruleArn))
+            .then(ruleArn => this.authorizeRule(ruleArn))
             .then(() => this.updateEventTarget());
     }
 
