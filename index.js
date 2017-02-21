@@ -41,7 +41,7 @@ cc.lambdaScheduler = c.fun({ config: cc.lambdaSchedulerConfig })
         .returnsPromise(c.value(undefined)),
 
       updateEventTarget: c.fun()
-        .returnsPromise(c.object),
+        .returnsPromise(c.value(undefined)),
 
       schedule: c.fun()
         .returnsPromise(c.value(undefined)),
@@ -120,7 +120,7 @@ class LambdaSchedulerImpl {
     const cloudWatchEvents = this.cloudWatchEvents;
     const putTargets = pify(cloudWatchEvents.putTargets.bind(cloudWatchEvents));
 
-    this._getFunctionArn()
+    return this._getFunctionArn()
       .then(functionArn => {
         const targetAttrs = {
           Rule: this.ruleName,
@@ -128,7 +128,9 @@ class LambdaSchedulerImpl {
         };
 
         return putTargets(targetAttrs);
-      });
+      })
+      // Discard spurious success return value.
+      .then(() => undefined);
   }
 
   schedule () {
