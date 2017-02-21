@@ -102,10 +102,10 @@ class LambdaSchedulerImpl {
           throw err;
         }
 
-          // A conflict means there is already a statement in place with
-          // the ID 'InvokeFromCloudWatchEvent'. We're going to assume
-          // this is a rule we have created during a previous deploy which
-          // is still in effect.
+        // A conflict means there is already a statement in place with
+        // the ID 'InvokeFromCloudWatchEvent'. We're going to assume
+        // this is a rule we have created during a previous deploy which
+        // is still in effect.
       });
   }
 
