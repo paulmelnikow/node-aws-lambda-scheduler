@@ -19,7 +19,7 @@
   "license": "MIT",
   "devDependencies": {
     "aws-sdk": "2.x.x",
-    "eslint": "^2.13.1",
+    "eslint": "^5.9.0",
     "eslint-plugin-pnm": "^1.0.0",
     "node-aws-lambda": "0.1.8"
   },
