@@ -32,21 +32,21 @@ cc.lambdaSchedulerConfig = c.toContract({
 cc.ruleArn = c.string.rename('ruleArn')
 
 cc.lambdaScheduler = c.fun({ config: cc.lambdaSchedulerConfig })
-    .constructs({
+  .constructs({
 
-      updateEvent: c.fun()
-        .returnsPromise(cc.ruleArn),
+    updateEvent: c.fun()
+      .returnsPromise(cc.ruleArn),
 
-      authorizeRule: c.fun({ ruleArn: cc.ruleArn })
-        .returnsPromise(c.value(undefined)),
+    authorizeRule: c.fun({ ruleArn: cc.ruleArn })
+      .returnsPromise(c.value(undefined)),
 
-      updateEventTarget: c.fun()
-        .returnsPromise(c.value(undefined)),
+    updateEventTarget: c.fun()
+      .returnsPromise(c.value(undefined)),
 
-      schedule: c.fun()
-        .returnsPromise(c.value(undefined)),
+    schedule: c.fun()
+      .returnsPromise(c.value(undefined)),
 
-    })
+  })
 
 class LambdaSchedulerImpl {
 
@@ -62,7 +62,7 @@ class LambdaSchedulerImpl {
     this.scheduleExpression = config.scheduleExpression
   }
 
-    // Update the CloudWatch Events rule and return its ARN via promise.
+  // Update the CloudWatch Events rule and return its ARN via promise.
   updateEvent () {
     const cloudWatchEvents = this.cloudWatchEvents
     const listRules = pify(cloudWatchEvents.listRules.bind(cloudWatchEvents))
