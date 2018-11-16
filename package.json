@@ -4,13 +4,10 @@
   "description": "Minimalist utility to automatically schedule AWS Lambda functions",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint",
-    "lint": "eslint '**/*.js'"
+    "lint": "eslint \"**/*.js\"",
+    "test": "npm run lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/paulmelnikow/node-aws-lambda-scheduled.git"
-  },
+  "repository": "paulmelnikow/node-aws-lambda-scheduler",
   "keywords": [
     "lambda",
     "aws",
@@ -20,10 +17,6 @@
   ],
   "author": "Paul Melnikow",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/paulmelnikow/node-aws-lambda-scheduled/issues"
-  },
-  "homepage": "https://github.com/paulmelnikow/node-aws-lambda-scheduled#readme",
   "devDependencies": {
     "aws-sdk": "2.x.x",
     "eslint": "^2.13.1",
