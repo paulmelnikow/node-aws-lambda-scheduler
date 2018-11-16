@@ -1,14 +1,14 @@
-'use strict';
+'use strict'
 
-const pify = require('pify');
-const AWS = require('aws-sdk');
-const _ = require('underscore');
-const c = require('rho-cc-promise').mixin(require('rho-contracts-fork'));
+const pify = require('pify')
+const AWS = require('aws-sdk')
+const _ = require('underscore')
+const c = require('rho-cc-promise').mixin(require('rho-contracts-fork'))
 
 
-const cc = {};
+const cc = {}
 
-cc.awsRegion = require('rho-cc-aws-region');
+cc.awsRegion = require('rho-cc-aws-region')
 
 cc.lambdaSchedulerConfig = c.toContract({
 
@@ -27,66 +27,66 @@ cc.lambdaSchedulerConfig = c.toContract({
   scheduleExpression: c.string
     .doc('http://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html'),
 
-}).rename('lambdaSchedulerConfig');
+}).rename('lambdaSchedulerConfig')
 
-cc.ruleArn = c.string.rename('ruleArn');
+cc.ruleArn = c.string.rename('ruleArn')
 
 cc.lambdaScheduler = c.fun({ config: cc.lambdaSchedulerConfig })
-    .constructs({
+  .constructs({
 
-      updateEvent: c.fun()
-        .returnsPromise(cc.ruleArn),
+    updateEvent: c.fun()
+      .returnsPromise(cc.ruleArn),
 
-      authorizeRule: c.fun({ ruleArn: cc.ruleArn })
-        .returnsPromise(c.value(undefined)),
+    authorizeRule: c.fun({ ruleArn: cc.ruleArn })
+      .returnsPromise(c.value(undefined)),
 
-      updateEventTarget: c.fun()
-        .returnsPromise(c.value(undefined)),
+    updateEventTarget: c.fun()
+      .returnsPromise(c.value(undefined)),
 
-      schedule: c.fun()
-        .returnsPromise(c.value(undefined)),
+    schedule: c.fun()
+      .returnsPromise(c.value(undefined)),
 
-    });
+  })
 
 class LambdaSchedulerImpl {
 
   constructor (config) {
     const awsAttrs = _(config).pick(
-      'region', 'secretKeyId', 'secretAccessKey', 'secretToken');
+      'region', 'secretKeyId', 'secretAccessKey', 'secretToken')
 
-    this.cloudWatchEvents = new AWS.CloudWatchEvents(awsAttrs);
-    this.lambda = new AWS.Lambda(awsAttrs);
+    this.cloudWatchEvents = new AWS.CloudWatchEvents(awsAttrs)
+    this.lambda = new AWS.Lambda(awsAttrs)
 
-    this.functionName = config.functionName;
-    this.ruleName = config.ruleName;
-    this.scheduleExpression = config.scheduleExpression;
+    this.functionName = config.functionName
+    this.ruleName = config.ruleName
+    this.scheduleExpression = config.scheduleExpression
   }
 
-    // Update the CloudWatch Events rule and return its ARN via promise.
+  // Update the CloudWatch Events rule and return its ARN via promise.
   updateEvent () {
-    const cloudWatchEvents = this.cloudWatchEvents;
-    const listRules = pify(cloudWatchEvents.listRules.bind(cloudWatchEvents));
-    const putRule = pify(cloudWatchEvents.putRule.bind(cloudWatchEvents));
+    const cloudWatchEvents = this.cloudWatchEvents
+    const listRules = pify(cloudWatchEvents.listRules.bind(cloudWatchEvents))
+    const putRule = pify(cloudWatchEvents.putRule.bind(cloudWatchEvents))
 
     const ruleAttrs = {
       Name: this.ruleName,
       ScheduleExpression: this.scheduleExpression,
-    };
+    }
 
     return listRules({})
       .then(rules => {
-        const matching = _(rules.Rules).findWhere(ruleAttrs);
+        const matching = _(rules.Rules).findWhere(ruleAttrs)
 
         if (matching) {
-          return matching.Arn;
+          return matching.Arn
         } else {
-          return putRule(ruleAttrs).then(data => data.RuleArn);
+          return putRule(ruleAttrs).then(data => data.RuleArn)
         }
-      });
+      })
   }
 
   authorizeRule (ruleArn) {
-    const addPermission = pify(this.lambda.addPermission.bind(this.lambda));
+    const addPermission = pify(this.lambda.addPermission.bind(this.lambda))
 
     const permissionAttrs = {
       FunctionName: this.functionName,
@@ -94,51 +94,51 @@ class LambdaSchedulerImpl {
       Action: 'lambda:InvokeFunction',
       Principal: 'events.amazonaws.com',
       SourceArn: ruleArn,
-    };
+    }
 
     return addPermission(permissionAttrs)
       .catch(err => {
         if (err.code !== 'ResourceConflictException') {
-          throw err;
+          throw err
         }
 
         // A conflict means there is already a statement in place with
         // the ID 'InvokeFromCloudWatchEvent'. We're going to assume
         // this is a rule we have created during a previous deploy which
         // is still in effect.
-      });
+      })
   }
 
   _getFunctionArn () {
-    const getFunction = pify(this.lambda.getFunction.bind(this.lambda));
+    const getFunction = pify(this.lambda.getFunction.bind(this.lambda))
 
     return getFunction({ FunctionName: this.functionName })
-      .then(functionData => functionData.Configuration.FunctionArn);
+      .then(functionData => functionData.Configuration.FunctionArn)
   }
 
   updateEventTarget () {
-    const cloudWatchEvents = this.cloudWatchEvents;
-    const putTargets = pify(cloudWatchEvents.putTargets.bind(cloudWatchEvents));
+    const cloudWatchEvents = this.cloudWatchEvents
+    const putTargets = pify(cloudWatchEvents.putTargets.bind(cloudWatchEvents))
 
     return this._getFunctionArn()
       .then(functionArn => {
         const targetAttrs = {
           Rule: this.ruleName,
           Targets: [{ Id: '1', Arn: functionArn }],
-        };
+        }
 
-        return putTargets(targetAttrs);
+        return putTargets(targetAttrs)
       })
       // Discard spurious success return value.
-      .then(() => undefined);
+      .then(() => undefined)
   }
 
   schedule () {
     return this.updateEvent()
       .then(ruleArn => this.authorizeRule(ruleArn))
-      .then(() => this.updateEventTarget());
+      .then(() => this.updateEventTarget())
   }
 
 }
 
-exports.LambdaScheduler = cc.lambdaScheduler.wrap(LambdaSchedulerImpl);
+exports.LambdaScheduler = cc.lambdaScheduler.wrap(LambdaSchedulerImpl)
