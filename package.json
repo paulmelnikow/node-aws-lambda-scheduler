@@ -18,7 +18,7 @@
   "author": "Paul Melnikow",
   "license": "MIT",
   "devDependencies": {
-    "aws-sdk": "2.x.x",
+    "aws-sdk": "^2.357.0",
     "eslint": "^5.9.0",
     "eslint-plugin-pnm": "^2.0.0",
     "node-aws-lambda": "0.1.8"
