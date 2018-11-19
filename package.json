@@ -7,6 +7,9 @@
     "lint": "eslint \"**/*.js\"",
     "test": "npm run lint"
   },
+  "files": [
+    "**/*.js"
+  ],
   "repository": "paulmelnikow/node-aws-lambda-scheduler",
   "keywords": [
     "lambda",
