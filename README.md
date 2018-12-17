@@ -1,5 +1,14 @@
 # node-aws-lambda-scheduler
 
+[![version](https://img.shields.io/npm/v/node-aws-lambda-scheduler.svg?style=flat-square)][npm]
+[![license](https://img.shields.io/npm/l/node-aws-lambda-scheduler.svg?style=flat-square)][npm]
+[![build](https://img.shields.io/circleci/project/github/paulmelnikow/node-aws-lambda-scheduler/master.svg?style=flat-square)][build]
+[![code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)][prettier]
+
+[npm]: https://npmjs.com/node-aws-lambda-scheduler/
+[build]: https://circleci.com/gh/paulmelnikow/node-aws-lambda-scheduler/tree/master
+[prettier]: https://prettier.io/
+
 Minimalist utility to automatically [schedule AWS Lambda functions][schedule].
 
 Designed to be used in conjunction with ThoughtWorks Studios' minimalist library
