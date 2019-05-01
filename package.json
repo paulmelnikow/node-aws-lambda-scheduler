@@ -43,7 +43,7 @@
   "dependencies": {
     "pify": "^4.0.1",
     "rho-cc-aws-region": "^2.0.0",
-    "rho-cc-promise": "^2.0.0",
+    "rho-cc-promise": "^3.0.0",
     "rho-contracts-fork": "^1.3.0",
     "underscore": "^1.8.3"
   }
